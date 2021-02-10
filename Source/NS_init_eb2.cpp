@@ -73,9 +73,104 @@ initialize_EB2 (const Geometry& geom, const int required_coarsening_level,
     std::string geom_type;
     ppeb2.get("geom_type", geom_type);
 
-#if BL_SPACEDIM > 2
-  if (geom_type == "combustor")
-  {
+  if (geom_type == "CylinderMatrix") {
+
+    if ( AMREX_SPACEDIM == 3 ) Print() << " WARNING: CylinderMatrix is implemented in 2D only. \n";
+
+    // Get matrix parameters:
+    ParmParse pp("CylMat");
+
+    // Number of cylinder in X and Y
+    int Ncylx = 1, Ncyly = 1;
+    pp.get("cylCount_x",Ncylx);
+    pp.get("cylCount_y",Ncyly);
+    if ( Ncylx*Ncyly > 10 ) Abort("CylinderMatrix can only take up to 10 cylinders.");
+
+    // Cylinder radius
+    Real radius = 0.0;
+    pp.get("radius", radius);
+
+    // Spacing between adjacent cylinder in X and Y
+    Real dx_x = 0.0, dx_y = 0.0;
+    pp.get("spacing_x", dx_x);
+    pp.get("spacing_y", dx_y);
+
+    // Center of the lower left cylinder
+    Vector<Real> center(AMREX_SPACEDIM);  
+    pp.getarr("center", center, 0, AMREX_SPACEDIM);
+
+    // TODO: Check domain sizes
+
+    Vector<EB2::SphereIF> listSphere;
+
+    // Generate matrix
+    for (int cx = 1; cx <= Ncylx; cx++ ) {
+       for (int cy = 1; cy <= Ncyly; cy++ ) {
+          Array<Real,AMREX_SPACEDIM> loc = {AMREX_D_DECL(center[0] + (cx-1) * dx_x,
+                                                         center[1] + (cy-1) * dx_y,
+                                                         0.0)};
+          EB2::SphereIF sphere(radius, loc, false);  
+          listSphere.push_back(sphere);
+       }
+    }
+
+    if ( listSphere.size() == 1 ) {
+       auto gshop = EB2::makeShop(listSphere[0]);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 2 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 3 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 4 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2],
+                                      listSphere[3]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 5 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2],
+                                      listSphere[3],listSphere[4]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 6 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2],
+                                      listSphere[3],listSphere[4],listSphere[5]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 7 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2],
+                                      listSphere[3],listSphere[4],listSphere[5],
+                                      listSphere[6]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 8 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2],
+                                      listSphere[3],listSphere[4],listSphere[5],
+                                      listSphere[6],listSphere[7]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 9 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2],
+                                      listSphere[3],listSphere[4],listSphere[5],
+                                      listSphere[6],listSphere[7],listSphere[8]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else if ( listSphere.size() == 10 ) {
+       auto unionCyl = EB2::makeUnion(listSphere[0],listSphere[1],listSphere[2],
+                                      listSphere[3],listSphere[4],listSphere[5],
+                                      listSphere[6],listSphere[7],listSphere[8],
+                                      listSphere[9]);
+       auto gshop = EB2::makeShop(unionCyl);
+       EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
+    } else {
+       Abort("Unsupported number of cylinders in CylinderMatrix EB geom.");
+    }
+
+#if (AMREX_SPACEDIM == 3)
+  } else if (geom_type == "combustor") {
     ParmParse pp("combustor");
 
     Real fwl;
@@ -121,9 +216,9 @@ initialize_EB2 (const Geometry& geom, const int required_coarsening_level,
 
     auto gshop = EB2::makeShop(pr);
     EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
-  }
-  else if (geom_type == "Piston-Cylinder")
-  {
+
+  } else if (geom_type == "Piston-Cylinder") {
+
     EB2::SplineIF Piston;
 
     std::vector<amrex::RealVect> splpts;
@@ -157,9 +252,9 @@ initialize_EB2 (const Geometry& geom, const int required_coarsening_level,
     auto PistonCylinder = EB2::makeUnion(revolvePiston, cylinder);
     auto gshop = EB2::makeShop(PistonCylinder);
     EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
-  }
-  else if (geom_type == "Line-Piston-Cylinder")
-  {
+
+  } else if (geom_type == "Line-Piston-Cylinder") {
+
     EB2::SplineIF Piston;
     std::vector<amrex::RealVect> lnpts;
     amrex::RealVect p;
@@ -207,9 +302,8 @@ initialize_EB2 (const Geometry& geom, const int required_coarsening_level,
     auto PistonCylinder = EB2::makeUnion(revolvePiston, cylinder);
     auto gshop = EB2::makeShop(PistonCylinder);
     EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
-  }
-  else if (geom_type == "Inflow-Pipe")
-  {
+
+  } else if (geom_type == "Inflow-Pipe") {
     
     // Initialise parameters
     int direction1 = 2;
@@ -270,9 +364,7 @@ initialize_EB2 (const Geometry& geom, const int required_coarsening_level,
     int max_coarsening_level = 100;
     EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
 
-  }
-  else if (geom_type == "Mixing-Pipe")
-  {
+  } else if (geom_type == "Mixing-Pipe") {
 
     // Initialise parameters
     int direction = 1;
@@ -310,9 +402,7 @@ initialize_EB2 (const Geometry& geom, const int required_coarsening_level,
     int max_coarsening_level = 100;
     EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
 
-  }
-  else if (geom_type == "Square-Grid")
-  {
+  } else if (geom_type == "Square-Grid") {
 
     // Initialise parameters
     Real dim_L0 = 0.08;
@@ -367,10 +457,9 @@ initialize_EB2 (const Geometry& geom, const int required_coarsening_level,
     int max_coarsening_level = 100;
     EB2::Build(gshop, geom, required_coarsening_level, max_coarsening_level);
 
-  }
-  else
 #endif
-  {
+  } else {  // Pass geometry to AMReX
+
     EB2::Build(geom, required_coarsening_level, max_coarsening_level);
   }
 }
