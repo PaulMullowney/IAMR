@@ -11,5 +11,6 @@ CEXE_sources += iamr_mol_predict_vel_on_faces.cpp
 ifeq ($(USE_EB), TRUE)
   CEXE_sources += iamr_mol_eb_predict_vel_on_faces.cpp
   CEXE_headers += iamr_mol_eb_edge_state_K.H
+  CEXE_sources += iamr_mol_eb_edge_state.cpp
 endif
 #
