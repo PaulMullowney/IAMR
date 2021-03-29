@@ -1889,7 +1889,7 @@ Diffusion::getTensorViscTerms (MultiFab&              visc_terms,
            mlmg.apply({&visc_tmp}, {&s_tmp});
         }
 
-#if AMREX_USE_EB
+#ifdef AMREX_USE_EB
         const amrex::MultiFab* weights;
         const auto& ebfactory = dynamic_cast<EBFArrayBoxFactory const&>(navier_stokes->Factory());
         weights = &(ebfactory.getVolFrac());
