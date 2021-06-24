@@ -835,7 +835,7 @@ MacProj::mac_sync_compute (int                    level,
                            int                    eComp,
                            MultiFab&              /*rho_half*/,
                            FluxRegister*          adv_flux_reg,
-                           Vector<AdvectionForm>& /*advectionType*/,
+                           Vector<AdvectionForm>& advectionType,
                            bool                   modify_reflux_normal_vel,
                            Real                   dt,
                            bool                   update_fluxreg)
@@ -900,7 +900,11 @@ MacProj::mac_sync_compute (int                    level,
         //
 
         // Possibly unsused  arguments -- used only in EB case since we don't need to recompute the edge states
-        BCRec  const* d_bcrec_ptr = NULL;
+        const int  sync_comp   = comp < AMREX_SPACEDIM ? comp   : comp-AMREX_SPACEDIM;
+        BCRec  const* d_bcrec_ptr = comp < AMREX_SPACEDIM
+                                           ? &(ns_level.get_bcrec_velocity_d_ptr())[sync_comp]
+                                           : &(ns_level.get_bcrec_scalars_d_ptr())[sync_comp];
+
         Gpu::DeviceVector<int> iconserv;
         iconserv.resize(ncomp, 0);
         for (int i = 0; i < ncomp; ++i) {
