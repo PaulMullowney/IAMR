@@ -4317,10 +4317,7 @@ NavierStokesBase::predict_velocity (Real  dt)
    //
    MultiFab visc_terms(grids,dmap,nComp,nghost_force(),MFInfo(), Factory());
 
-   // Need either the regular number of ghost cells for the state or
-   // 2 more than what is in the face velocity.
-   int ngrow = std::max(u_mac[0].nGrow()+2,nghost_state());
-   FillPatchIterator U_fpi(*this,visc_terms,ngrow,prev_time,State_Type,Xvel,AMREX_SPACEDIM);
+   FillPatchIterator U_fpi(*this,visc_terms,nghost_state(),prev_time,State_Type,Xvel,AMREX_SPACEDIM);
    MultiFab& Umf=U_fpi.get_mf();
 
    // Floor small values of states to be extrapolated
