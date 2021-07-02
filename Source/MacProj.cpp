@@ -833,6 +833,8 @@ MacProj::mac_sync_compute (int                    level,
                            int                    s_ind,
                            MultiFab* const*       sync_edges,
                            int                    eComp,
+                           int                    NUM_STATE,
+                           Real                   prev_time,
                            MultiFab&              /*rho_half*/,
                            FluxRegister*          adv_flux_reg,
                            Vector<AdvectionForm>& advectionType,
@@ -912,8 +914,13 @@ MacProj::mac_sync_compute (int                    level,
         }
 
 #ifdef AMREX_USE_EB
+        // Need to pass the state into ComputeSyncAofs for StateRedistribution
+        FillPatchIterator S_fpi(ns_level,Sync,ns_level.nghost_state(),
+                                prev_time,State_Type,0,NUM_STATE);
+        MultiFab& Smf = S_fpi.get_mf();
+
         EBGodunov::ComputeSyncAofs(Sync, s_ind, ncomp,
-                                   Sync, s_ind,                      // this is not used when known_edgestate = true
+                                   Smf, comp,
                                    AMREX_D_DECL(*Ucorr[0],*Ucorr[1],*Ucorr[2]),  // this is not used when we pass edge states
                                    AMREX_D_DECL(*Ucorr[0],*Ucorr[1],*Ucorr[2]),
                                    AMREX_D_DECL(*sync_edges[0],*sync_edges[1],*sync_edges[2]), eComp, true,

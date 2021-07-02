@@ -78,18 +78,20 @@ public:
 			   bool                         update_fluxreg = true);
 
     void mac_sync_compute (int                          level,
-			   amrex::Array<amrex::MultiFab*,AMREX_SPACEDIM>& Ucorr,
+                           amrex::Array<amrex::MultiFab*,AMREX_SPACEDIM>& Ucorr,
                            amrex::MultiFab&             Sync,
                            int                          comp,
                            int                          s_ind,
                            amrex::MultiFab* const*      sync_edges,
-			   int                          eComp,
+                           int                          eComp,
+                           int                          NUM_STATE,
+                           amrex::Real                  prev_time,
                            amrex::MultiFab&             rho_half,
                            amrex::FluxRegister*         adv_flux_reg,
                            amrex::Vector<AdvectionForm>& advectionType,
-                           bool		                 modify_reflux_normal_vel,
-                           amrex::Real                   dt,
-			   bool                          update_fluxreg = true);
+                           bool                         modify_reflux_normal_vel,
+                           amrex::Real                  dt,
+                           bool                         update_fluxreg = true);
 
     static void Initialize ();
     static void Finalize ();
