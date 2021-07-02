@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Constructing Embedded Boundaries in IAMR &mdash; IAMR 21.08-dev documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Particles" href="Particles_Chapter.html" />
+    <link rel="prev" title="Embedded Boundaries" href="EB.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> IAMR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                21.08-dev
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction_Chapter.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Getting_Started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Units.html">Units</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Software_Chapter.html">Software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Visualization_Chapter.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inputs_Chapter.html">Run-time Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ManagingGridHierarchy_Chapter.html">Gridding and Load Balancing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AMR.html">AMR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parallel.html">Parallelization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fluids_Chapter.html">Solving the Fluid Equations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="EB.html">Embedded Boundaries</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Constructing Embedded Boundaries in IAMR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-iamr-constructs-the-eb-geometry">How IAMR Constructs the EB Geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#iamr-s-eb-data-structures">IAMR’s EB Data Structures</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Particles_Chapter.html">Particles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debugging.html">Debugging</a></li>
+</ul>
+<p class="caption"><span class="caption-text">References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IAMR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="EB.html">Embedded Boundaries</a> &raquo;</li>
+        
+      <li>Constructing Embedded Boundaries in IAMR</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/EBWalls.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="constructing-embedded-boundaries-in-iamr">
+<span id="sec-eb-basics"></span><h1>Constructing Embedded Boundaries in IAMR<a class="headerlink" href="#constructing-embedded-boundaries-in-iamr" title="Permalink to this headline">¶</a></h1>
+<p>IAMR uses AMReX’s constructive solid geometry framework defined in the namespace
+<code class="code cpp c++ docutils literal notranslate"><span class="name"><span class="pre">amrex</span></span><span class="operator"><span class="pre">::</span></span><span class="name"><span class="pre">EB2</span></span></code>. See the <a href="#id1"><span class="problematic" id="id2">`AMReX EB documentation`_</span></a> for more details.</p>
+<section id="how-iamr-constructs-the-eb-geometry">
+<h2>How IAMR Constructs the EB Geometry<a class="headerlink" href="#how-iamr-constructs-the-eb-geometry" title="Permalink to this headline">¶</a></h2>
+<p>Once a geometry is selected by <code class="code cpp c++ docutils literal notranslate"><span class="name"><span class="pre">IAMR</span></span><span class="operator"><span class="pre">::</span></span><span class="name"><span class="pre">make_eb_geometry</span></span></code>, the procedure is
+the same for (almost) all geometries. Also see the <a href="#id3"><span class="problematic" id="id4">`AMReX geometry
+documentation`_</span></a> for information on how to construct new geometries:</p>
+<ol class="arabic simple">
+<li><p>Construct an implicit function representing the geometry (using the language
+of constructive solid geometry). For example</p></li>
+</ol>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">EB2</span><span class="o">::</span><span class="n">CylinderIF</span> <span class="n">my_cyl</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">inside</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">gshop_cyl</span> <span class="o">=</span> <span class="n">EB2</span><span class="o">::</span><span class="n">makeShop</span><span class="p">(</span><span class="n">my_cyl</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Call <code class="code cpp c++ docutils literal notranslate"><span class="name"><span class="pre">IAMR</span></span><span class="operator"><span class="pre">::</span></span><span class="name"><span class="pre">build_eb_levels</span></span><span class="punctuation"><span class="pre">(</span></span><span class="name"><span class="pre">gshop</span></span><span class="punctuation"><span class="pre">)</span></span></code> this function builds the EB levels
+and fills the implicit function <code class="code cpp c++ docutils literal notranslate"><span class="name"><span class="pre">MultiFab</span></span></code> (the later being used to
+construct the level-set function).</p></li>
+</ol>
+</section>
+<section id="iamr-s-eb-data-structures">
+<h2>IAMR’s EB Data Structures<a class="headerlink" href="#iamr-s-eb-data-structures" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="code cpp c++ docutils literal notranslate"><span class="name"><span class="pre">NavierStokesBase</span></span></code> class stores the following EB data:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">//! EB levels representing fluid boundary conditions</span>
+<span class="n">Vector</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">EB2</span><span class="o">::</span><span class="n">Level</span> <span class="o">*&gt;</span> <span class="n">eb_levels</span><span class="p">;</span>
+
+<span class="c1">//! EB factory that lives on the fluid grids</span>
+<span class="n">Vector</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">amrex</span><span class="o">::</span><span class="n">EBFArrayBoxFactory</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">ebfactory</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="Particles_Chapter.html" class="btn btn-neutral float-right" title="Particles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="EB.html" class="btn btn-neutral float-left" title="Embedded Boundaries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2017-2018, IAMR Team.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
